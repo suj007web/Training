@@ -1,19 +1,20 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import type { UserRepository } from 'src/domains/user/user.repository';
+import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Types } from 'mongoose';
 import { RegisterDTO } from './dto/register.dto';
 import { User, UserDocument, UserRole } from 'src/domains/user/user.entity';
 import { LoginDTO } from './dto/login.dto';
 import type { PasswordService } from 'src/domains/common/password.service';
 import { PASSWORD_SERVICE } from 'src/domains/common/password.token';
 import { JwtService } from '@nestjs/jwt';
-import { USER_REPOSITORY } from 'src/domains/user/user.token';
+import { USER_REPOSITORY } from 'src/infrastructure/database/repository.token';
+import { MongoRepository } from 'src/infrastructure/mongodb/mongo.repository';
 
 @Injectable()
 export class UserService {
 
     constructor(
         @Inject(USER_REPOSITORY)
-        private readonly userRepository : UserRepository,
+        private readonly userRepository : MongoRepository<User>,
         @Inject(PASSWORD_SERVICE)
         private readonly passwordService: PasswordService,
         private readonly jwtService : JwtService
@@ -28,9 +29,39 @@ export class UserService {
             password: hashedPassword,
             role: UserRole.USER
         }
+        const existingUser = await this.userRepository.findByData({
+            username : user.username,
+            email : user.email
+        })
+        if(existingUser){
+            throw new ConflictException('User with this username or email already exists');
+        }
         const newUser = this.userRepository.create(user);
         const { password, ...userWithoutPassword } = await newUser;
         return userWithoutPassword;
+    }
+
+    async createAdmin(registerDto: RegisterDTO): Promise<{ message: string } & Partial<User>> {
+        const hashedPassword = await this.passwordService.hashPassword(registerDto.password);
+        const user: User = {
+            username: registerDto.username,
+            email: registerDto.email,
+            password: hashedPassword,
+            role: UserRole.ADMIN
+        };
+                const existingUser = await this.userRepository.findByData({
+            username : user.username,
+            email : user.email
+        })
+        if(existingUser){
+            throw new ConflictException('User with this username or email already exists');
+        }
+        const newUser = this.userRepository.create(user);
+        const { password, ...userWithoutPassword } = await newUser;
+        return {
+            message : "Admin created successfully",
+            ...userWithoutPassword
+        };
     }
 
     async login(loginDto : LoginDTO)  {
@@ -90,7 +121,9 @@ export class UserService {
             secret : 'refresh-secret'
         })
 
-        const user = await this.userRepository.findById(payload.id);
+        const user = await this.userRepository.findByData({
+            _id : payload.id
+        });
         if(!user){
             throw new UnauthorizedException('Invalid refresh token');
         }
@@ -106,5 +139,18 @@ export class UserService {
         }
     }
 
+    async getCurrentUser(userId : string) : Promise<Partial<User>> {
+
+        const user = await this.userRepository.findByData({
+            _id :  userId
+        })
+     
+        if(!user){
+            throw new UnauthorizedException('User not found');
+        }
+
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
+    }
 
 }

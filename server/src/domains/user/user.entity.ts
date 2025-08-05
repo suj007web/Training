@@ -3,6 +3,7 @@ import { Document, Types } from "mongoose";
 
 export type UserDocument = User & Document;
 
+
 export enum UserRole {
     USER = 'user',
     ADMIN = 'admin',
@@ -10,7 +11,7 @@ export enum UserRole {
 
 @Schema()
 export class User{
-    _id?: Types.ObjectId;
+    _id?: Types.ObjectId | string;
     @Prop({ required: true, unique: true })
     username: string;
 

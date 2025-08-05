@@ -1,35 +1,29 @@
 import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from 'src/domains/user/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { SecurityModule } from 'src/infrastructure/security/security.module';
-import { MongoUserRepository } from 'src/infrastructure/mongodb/mongo-user.repository';
-import { USER_REPOSITORY } from 'src/domains/user/user.token';
+import { DatabaseModule } from 'src/infrastructure/database/database.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from 'src/strategies/jwt.strategy';
+import { RolesGuard } from 'src/guards/roles.guard';
 
 
 @Module({
   imports : [
-    MongooseModule.forFeature([
-      {
-        name : User.name,
-        schema : UserSchema
-      }
-    ]),
+    DatabaseModule,
     JwtModule.register({
       secret : 'secret',
       signOptions: { expiresIn: '1h' }
     }),
-    SecurityModule
+    SecurityModule,
+    PassportModule
   ],
   controllers: [UserController],
   providers: [
     UserService,
-    {
-      provide : USER_REPOSITORY,
-      useClass: MongoUserRepository
-    }
+    JwtStrategy,
+    RolesGuard
   ],
   exports:[UserService]
 })
