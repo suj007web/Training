@@ -1,9 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterDTO } from './dto/register.dto';
 import { LoginDTO } from './dto/login.dto';
 import { JwtAuthGuard } from 'src/guards/jwtauth.guard';
 import { CurrentUser } from 'src/decorators/currentUser.decorator';
+import { Roles } from 'src/decorators/role.decorator';
+import { User, UserRole } from 'src/domains/user/user.entity';
+import { RolesGuard } from 'src/guards/roles.guard';
 
 @Controller('user')
 export class UserController {
@@ -23,5 +26,19 @@ export class UserController {
     @Get('profile')
     async getCurrentUser(@CurrentUser() user) {
         return user;
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(UserRole.ADMIN)
+    @Put(':id')
+    async editUser(@Param('id') id: string, @Body() data: Partial<User>) {
+        return this.userService.editUser(id, data);
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(UserRole.ADMIN)
+    @Delete(':id')
+    async deleteUser(@Param('id') id: string) {
+        return this.userService.deleteUser(id);
     }
 }

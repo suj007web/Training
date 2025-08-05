@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { RegisterDTO } from './dto/register.dto';
 import { User, UserDocument, UserRole } from 'src/domains/user/user.entity';
@@ -8,6 +8,7 @@ import { PASSWORD_SERVICE } from 'src/domains/common/password.token';
 import { JwtService } from '@nestjs/jwt';
 import { USER_REPOSITORY } from 'src/infrastructure/database/repository.token';
 import { MongoRepository } from 'src/infrastructure/mongodb/mongo.repository';
+import { UpdateUserDTO } from './dto/update.dto';
 
 @Injectable()
 export class UserService {
@@ -153,4 +154,28 @@ export class UserService {
         return userWithoutPassword;
     }
 
+    async editUser(id : string, data : UpdateUserDTO) : Promise<Partial<User>>{
+        const {password:newPassword} = data;
+        if(newPassword){
+            data.password  = await this.passwordService.hashPassword(newPassword);
+        }
+        const user = await this.userRepository.update(id, data);
+        if(!user){
+            throw new NotFoundException('User not found');
+        }
+
+        const { password , ...userWithoutPassword } = user;
+        return userWithoutPassword;
+
+    }
+
+    async deleteUser(id : string) : Promise<void>{
+        const user = await this.userRepository.findByData({
+            _id : id
+        });
+        if(!user){
+            throw new NotFoundException('User not found');
+        }
+        await this.userRepository.delete(id);
+    }
 }

@@ -12,8 +12,9 @@ export class MongoRepository<T> implements BaseRepository<T> {
         return this.model.find().exec().then(entries => entries.map(entry => entry.toObject() as T));
     }
     async update(id: string, data: Partial<T>): Promise<T | null> {
+        // console.log("---- INSIDE MONGO REPOSITORY --- updated ", data)
         const updatedModel = await this.model.findByIdAndUpdate(id, data as UpdateQuery<T & Document>
-            , { new: true }).exec();
+            , { new: true }).lean().exec();
         return updatedModel ? updatedModel as T : null;
     }
     async delete(id: string): Promise<void> {
