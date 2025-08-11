@@ -176,6 +176,7 @@ export class UserController {
     @Post('logout')
     async logout(@Body() logoutDto : LogoutDTO) : Promise<APIResponse<void>> {
         try{
+            console.log('Logging out user:', logoutDto.id, 'with token:', logoutDto.token);
             await this.userService.logout(logoutDto.id, logoutDto.token);
             return {
                 status: 'success',

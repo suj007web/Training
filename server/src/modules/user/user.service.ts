@@ -7,7 +7,7 @@ import type { PasswordService } from 'src/domains/common/password.service';
 import { PASSWORD_SERVICE } from 'src/domains/common/password.token';
 import { JwtService } from '@nestjs/jwt';
 import { USER_REPOSITORY } from 'src/infrastructure/database/repository.token';
-import { MongoRepository } from 'src/infrastructure/mongodb/mongo.repository';
+
 import { UpdateUserDTO } from './dto/update.dto';
 import { MongoUserRepository } from 'src/infrastructure/mongodb/mongo-user.repository';
 import { ThemeService } from '../theme/theme.service';

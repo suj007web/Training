@@ -16,16 +16,17 @@ export async function logoutAction(){
 
     const response = await _fetch({
         url: `${backendUrl}/user/logout`,
-        method : 'DELETE',
+        method : 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body:{
             id : decodedToken?.id ,
             token : token
         }
     })
-
+    console.log('Logout response:', response);
     redirect(`/logout?success=Logged+out+successfully`)    
 
 }

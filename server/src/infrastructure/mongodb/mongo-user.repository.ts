@@ -18,13 +18,16 @@ export class MongoUserRepository extends MongoRepository<User> {
     ).exec();
   }
 
-  async removeActiveToken(id: string, token: string): Promise<void> {
-    await this.model.findByIdAndUpdate(
-      id,
-      { $pull: { activeTokens: token } },
-      { new: true }
-    ).exec();
-  }
+async removeActiveToken(id: string, token: string): Promise<void> {
+  console.log('Removing token:', token, 'for user ID:', id);
+  token = token.trim();
+  const result = await this.model.updateOne(
+    { _id: id },
+    { $pull: { activeTokens: token } }
+  );
+  return ;
+}
+
 
 
 }
