@@ -27,6 +27,13 @@ export class User{
         default: UserRole.USER
     })
     role: UserRole;
+
+      @Prop({ type: [String], default: [] })
+  activeTokens: string[];
+
+    @Prop({ type: Number, default: null })
+    themeId?: number;
+
     
 
 }

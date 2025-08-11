@@ -1,11 +1,10 @@
 import React from 'react'
 
-const UserWelcome = () => {
-    const userName = "User"; 
+const UserWelcome = ({username} : {username : string}) => {
   return (
     <div>
         <h1 className='text-xl font-semibold '>
-            Welcome, {userName} !
+            Welcome, {username} !
         </h1>
     </div>
   )

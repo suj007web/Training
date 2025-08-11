@@ -7,26 +7,32 @@ import {
   FormControl,
   Button,
 } from '@mui/material';
+import { saveThemeChoice, setDefaultTheme, getCurrentTheme } from '../actions';
+import { _fetch } from '@/fetch';
+import { backendUrl, themeMap } from '@/config';
+import { cookies } from 'next/headers';
 
-const ThemeSelectorRadio = () => {
-  const themes = [
-    {
-      name: 'Theme 1',
-      value: 'theme1',
-      color: 'bg-green-200',
-    },
-    {
-      name: 'Theme 2',
-      value: 'theme2',
-      color: 'bg-pink-200', 
-    },
-    {
-      name: 'Theme 3',
-      value: 'theme3',
-      color: 'bg-blue-200', 
-    },
-  ];
 
+export type ThemeObject = {
+  name: string;
+  value: string;
+  color: string;
+};
+
+
+const ThemeSelector = async () => {
+  const res = await _fetch<ThemeObject[]>({
+    url : `${backendUrl}/theme/all`
+  })
+  console.log(`${backendUrl}/theme/all ` +res.data)
+  const themes : ThemeObject[] = res.data || [];
+
+
+
+  const currentTheme = await getCurrentTheme();
+    const cookieStore = await cookies();
+    const themeName = cookieStore.get('selectedTheme')?.value || 'theme1';
+    const color = themeMap[themeName];
   return (
     <Box
       sx={{
@@ -46,78 +52,88 @@ const ThemeSelectorRadio = () => {
         Select Theme
       </Typography>
 
-      <FormControl component="form">
-        <RadioGroup row name="theme-selection" 
-        defaultValue={themes[0].value}
-        >
-          {themes.map((theme) => (
-            <Box
-              key={theme.value}
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                mx: 2,
-              }}
-            >
-              <Radio value={theme.value} />
+      <form action={saveThemeChoice}>
+        <FormControl component="div">
+          <RadioGroup 
+            key={currentTheme} // Add key to force re-render when theme changes
+            row 
+            name="theme-selection" 
+            defaultValue={currentTheme}
+          >
+            {themes.map((theme) => (
               <Box
-              className={theme.color}
+                key={theme.value}
                 sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  mx: 2,
+                }}
+              >
+                <Radio value={theme.value} />
+                <Box
+     
+                  sx={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                  width: 80,
-                  height: 80,
-                  borderRadius: 2,
-                }}
-              >
-                <Typography 
-                   sx={{ fontWeight: 'bold', color: '#333' }}
-                >{theme.name}</Typography>
+                    width: 80,
+                    height: 80,
+                    borderRadius: 2,
+                    backgroundColor: theme.color,
+                  }}
+                >
+                  <Typography 
+                    sx={{ fontWeight: 'bold', color: '#333' }}
+                  >
+                    {theme.name}
+                  </Typography>
                 </Box>
-              
-            </Box>
-          ))}
-        </RadioGroup>
-      </FormControl>
+              </Box>
+            ))}
+          </RadioGroup>
+        </FormControl>
 
-      <Box
-      className="flex justify-center gap-4 mt-5"
-      >
-        <Button
-                  variant="contained"
-          fullWidth
-          sx={{
-            backgroundColor: '#9900ff',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: '1rem',
-            borderRadius: '8px',
-            textTransform: 'none',
-            '&:hover': {
-              backgroundColor: '#8800e0',
-            },
-          }}
-        >SET TO DEFAULT</Button>
-        <Button
-                  variant="contained"
-          fullWidth
-          sx={{
-            backgroundColor: '#9900ff',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: '1rem',
-            borderRadius: '8px',
-            textTransform: 'none',
-            '&:hover': {
-              backgroundColor: '#8800e0',
-            },
-          }}
-        >SAVE CHOICE</Button>
-      </Box>
+        <Box className="flex justify-center gap-4 mt-5">
+          <Button
+            onClick={async () => {
+              'use server';
+              await setDefaultTheme(new FormData());
+            }}
+            variant="contained"
+            fullWidth
+            sx={{
+              backgroundColor: "#"+color,
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '1rem',
+              borderRadius: '8px',
+              textTransform: 'none',
+           
+            }}
+          >
+            SET TO DEFAULT
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{
+              backgroundColor: "#"+color,
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '1rem',
+              borderRadius: '8px',
+              textTransform: 'none',
+         
+            }}
+          >
+            SAVE CHOICE
+          </Button>
+        </Box>
+      </form>
     </Box>
   );
 };
 
-export default ThemeSelectorRadio;
+export default ThemeSelector;

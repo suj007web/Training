@@ -7,6 +7,7 @@ import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from 'src/strategies/jwt.strategy';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { ThemeModule } from '../theme/theme.module';
 
 
 @Module({
@@ -17,7 +18,8 @@ import { RolesGuard } from 'src/guards/roles.guard';
       signOptions: { expiresIn: '1h' }
     }),
     SecurityModule,
-    PassportModule
+    PassportModule,
+    ThemeModule
   ],
   controllers: [UserController],
   providers: [

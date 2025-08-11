@@ -9,23 +9,30 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         super({
             jwtFromRequest : ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey : 'secret'
+            secretOrKey : 'secret',
+            passReqToCallback: true
         })
     }
 
-    async validate(payload: any) {
-        try{
-            const user = await this.userService.getCurrentUser(payload.id);
-            if(!user){
-                throw new UnauthorizedException('User not found');
-            }
-            return {
-                ...user,
-                role : payload.role
-            }
-        }catch(e){
-            void e;
-            throw new UnauthorizedException('Invalid token');
-        }
+      async validate(req: Request, payload: any) {
+    const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+    
+    if (!payload?.id || !token) {
+      throw new UnauthorizedException('Invalid token payload or structure');
     }
+
+    const user = await this.userService.getCurrentUser(payload.id);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    if (!user.activeTokens?.includes(token)) {
+      throw new UnauthorizedException('Token has been revoked');
+    }
+
+    return {
+      ...user,
+      role: payload.role,
+    };
+  }
 }

@@ -1,24 +1,44 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
-import { MongoRepository } from '../mongodb/mongo.repository';
-import { USER_REPOSITORY } from './repository.token';
+import { RESET_TOKEN_REPOSITORY, THEME_REPOSITORY, USER_REPOSITORY } from './repository.token';
 import { User, UserSchema } from 'src/domains/user/user.entity';
+import { MongoUserRepository } from '../mongodb/mongo-user.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Theme } from 'src/domains/theme/theme.entity';
+import { PostgresThemeRepository } from '../postgres/postgres-theme.repository';
+import { MongoRepository } from '../mongodb/mongo.repository';
+import { PasswordResetToken, PasswordResetTokenSchema } from 'src/domains/reset-token/reset-token.entity';
 
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
+      { name : PasswordResetToken.name, schema : PasswordResetTokenSchema}
     ]),
+    TypeOrmModule.forFeature(
+      [Theme]
+    )
+
   ],
   providers: [
     {
       provide: USER_REPOSITORY,
-      useFactory: (userModel) => new MongoRepository<User>(userModel),
-      inject: [getModelToken(User.name)],
+      // useFactory: (userModel) => new MongoRepository<User>(userModel),
+      // inject: [getModelToken(User.name)],
+      useClass: MongoUserRepository,
     },
+    {
+      provide: THEME_REPOSITORY,
+      useClass: PostgresThemeRepository,
+    },
+    {
+      provide: RESET_TOKEN_REPOSITORY,
+      useFactory: (resetTokenModel) => new MongoRepository<PasswordResetToken>(resetTokenModel),
+      inject: [getModelToken(PasswordResetToken.name)],
+    }
 
   ],
-  exports: [USER_REPOSITORY],
+  exports: [USER_REPOSITORY, THEME_REPOSITORY, RESET_TOKEN_REPOSITORY],
 })
 export class DatabaseModule {}

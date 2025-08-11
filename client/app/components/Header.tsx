@@ -1,14 +1,30 @@
 import Link from 'next/link'
 import React from 'react'
+import { logoutAction } from '../logout/actions'
+import { cookies } from 'next/headers';
+import { themeMap } from '@/config';
 
-const Header = () => {
+
+const Header = async() => {
+  const cookieStore = await cookies();
+  const themeName = cookieStore.get('selectedTheme')?.value || 'theme1';
+  const color = themeMap[themeName]
   return (
     <div>
-        <div className="flex bg-purple-500 text-white px-10 py-4 justify-between">
+        <div className="flex text-white px-10 py-4 justify-between" style={{
+          backgroundColor: `${"#"+color}`
+        }}>
             <Link className='font-semibold text-2xl' href={"/"}>Control Panel</Link>
             <div className='flex gap-7'>
                 <Link className='font-semibold text-2xl' href={"/edit"}>EDIT PROFILE</Link>
-                <Link className='font-semibold text-2xl' href={"/logout"}>LOGOUT</Link>
+                <form action={logoutAction}>
+
+                  <button className='font-semibold text-2xl cursor-pointer' type='submit'>
+                    LOGOUT
+                  </button>
+             
+
+                </form>
             </div>
         </div>
     </div>

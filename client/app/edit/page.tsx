@@ -1,167 +1,95 @@
-"use client";
-
-import React, { useState } from 'react';
+import { backendUrl } from "@/config"
+import { _fetch } from "@/fetch"
+import { cookies } from "next/headers";
 import {
-  Box,
-  Button,
-  InputAdornment,
-  OutlinedInput,
-  TextField,
-  Typography,
-  IconButton,
-  FormControl,
-  InputLabel,
+  Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, Typography
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { User } from "@/interfaces/interfaces";
+import Link from "next/link";
+import { parseJwt } from "@/lib/utils";
+import { redirect } from "next/navigation";
+const getAllUsers = async()=>{
 
-const EditProfileForm = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const cookieStore = await cookies();
 
-  const handleTogglePassword = () => setShowPassword((prev) => !prev);
-  const handleToggleConfirmPassword = () => setShowConfirmPassword((prev) => !prev);
+    const response  = await _fetch<Partial<User>[]>({
+      url : `${backendUrl}/user/all`,
+      headers:{
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookieStore.get('token')?.value || ''}`
+      }
+    })
 
-  const handleReset = () => {
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
-  };
+    console.log('Fetched all users:', response);
 
-  const handleSave = () => {
+    return response.data || [];
 
-  };
+    
+}
 
-  const handleDelete = () => {
+export default async function EditTable(){
+  const cookieStore = await cookies();
 
-  };
-
-  return (
-    <Box
-    className="border-1 border-gray-300"
-      sx={{
-        backgroundColor: '#f0f0f0',
-        maxWidth: 600,
-        mx: 'auto',
-        mt: 10,
-        p: 4,
-        borderRadius: 2,
-      }}
-    >
-      <Typography
-        variant="h5"
-        className="text-black font-bold text-center mb-8"
-      >
-        EDIT YOUR PROFILE
+  const token = cookieStore.get('token')?.value;
+  const decodedToken = parseJwt(token || '');
+  if(!decodedToken || decodedToken.role !== 'admin') {
+    redirect(`/?error=${encodeURIComponent('You must be logged in as an admin to access this page')}`);
+  }
+  const allUsers = await getAllUsers();
+  console.log(allUsers);
+  
+    return (
+    <main style={{ padding: '2rem' }}>
+      <Typography variant="h4" gutterBottom style={{ fontWeight: 600, color: '#9900ff' }}>
+        All Users
       </Typography>
 
-      <form className="flex flex-col gap-4 my-10">
-        <TextField
-          label="New Email Address"
-          variant="outlined"
-          fullWidth
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <FormControl variant="outlined" fullWidth required>
-          <InputLabel htmlFor="new-password">New Password</InputLabel>
-          <OutlinedInput
-            id="new-password"
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            label="New Password"
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton onClick={handleTogglePassword} edge="end">
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-
-        <FormControl variant="outlined" fullWidth required>
-          <InputLabel htmlFor="confirm-password">Confirm New Password</InputLabel>
-          <OutlinedInput
-            id="confirm-password"
-            type={showConfirmPassword ? 'text' : 'password'}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            label="Confirm New Password"
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton onClick={handleToggleConfirmPassword} edge="end">
-                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-      </form>
-
-      <Box className="flex justify-around gap-5">
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{
-            backgroundColor: '#9900ff',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: '1rem',
-            borderRadius: '8px',
-            textTransform: 'none',
-            '&:hover': {
-              backgroundColor: '#8800e0',
-            },
-          }}
-          onClick={handleReset}
-        >
-          RESET FORM
-        </Button>
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{
-            backgroundColor: '#9900ff',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: '1rem',
-            borderRadius: '8px',
-            textTransform: 'none',
-            '&:hover': {
-              backgroundColor: '#8800e0',
-            },
-          }}
-          onClick={handleSave}
-        >
-          SAVE CHANGES
-        </Button>
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{
-            backgroundColor: '#9900ff',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: '1rem',
-            borderRadius: '8px',
-            textTransform: 'none',
-            '&:hover': {
-              backgroundColor: '#8800e0',
-            },
-          }}
-          onClick={handleDelete}
-        >
-          DELETE ACCOUNT
-        </Button>
-      </Box>
-    </Box>
+      <TableContainer
+        component={Paper}
+        elevation={4}
+        style={{
+          borderRadius: '12px',
+          overflow: 'hidden',
+        }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow style={{ backgroundColor: '#f5f5f5' }}>
+              <TableCell style={{ fontWeight: 'bold' }}>Username</TableCell>
+              <TableCell style={{ fontWeight: 'bold' }}>Email</TableCell>
+              <TableCell style={{ fontWeight: 'bold' }}>Role</TableCell>
+              <TableCell style={{ fontWeight: 'bold' }}>Edit</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {allUsers.map((user, index) => (
+              <TableRow
+              
+                key={user._id}
+                style={{
+                  backgroundColor: index % 2 === 0 ? '#ffffff' : '#f9f9f9',
+                  transition: 'background-color 0.3s',
+                }}
+                hover
+              >
+                <TableCell style={{ padding: '12px' }}>{user.username}</TableCell>
+                <TableCell style={{ padding: '12px' }}>{user.email}</TableCell>
+                <TableCell style={{ padding: '12px', textTransform: 'capitalize' }}>
+                  {user.role}
+                </TableCell>
+                <TableCell
+                style={{ padding: '12px' }}
+                >
+                  <Link href={`/edit/${user._id}`} className="text-blue-500 hover:text-blue-700">
+                    Edit
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </main>
   );
-};
-
-export default EditProfileForm;
+}
