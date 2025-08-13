@@ -1,4 +1,4 @@
-import RegisterForm from '../components/register-form';
+import RegisterForm from '../components/user/register-form';
 import { registerAction } from './actions';
 
 export default function RegisterPage() {

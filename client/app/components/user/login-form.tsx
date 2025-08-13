@@ -6,7 +6,7 @@ import {
   TextField,
 } from '@mui/material';
 import Link from 'next/link';
-import TogglePasswordFields from './TogglePasswordFields';
+import TogglePasswordFields from '../utils/TogglePasswordFields';
 
 interface LoginFormProps {
   loginAction: (formData: FormData) => Promise<void>;

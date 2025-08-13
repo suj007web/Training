@@ -1,5 +1,5 @@
 import React from 'react'
-import ResetPasswordForm from '../components/reset-form'
+import ResetPasswordForm from '../components/user/reset-form'
 import { loginAction } from '../login/action'
 import { resetAction } from './action'
 import { cookies } from 'next/headers'

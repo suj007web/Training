@@ -7,10 +7,12 @@ import {
   FormControl,
   Button,
 } from '@mui/material';
-import { saveThemeChoice, setDefaultTheme, getCurrentTheme } from '../actions';
+import { saveThemeChoice, setDefaultTheme, getCurrentTheme } from '../../actions';
 import { _fetch } from '@/fetch';
 import { backendUrl, themeMap } from '@/config';
 import { cookies } from 'next/headers';
+import ThemeRadio from './ThemeRadio';
+import CommonButton from '../common/Button';
 
 
 export type ThemeObject = {
@@ -65,75 +67,28 @@ const ThemeSelector = async () => {
             defaultValue={currentTheme}
           >
             {themes.map((theme) => (
-              <Box
-                key={theme.value}
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  mx: 2,
-                }}
-              >
-                <Radio value={theme.value} />
-                <Box
-     
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: 80,
-                    height: 80,
-                    borderRadius: 2,
-                    backgroundColor: theme.color,
-                  }}
-                >
-                  <Typography 
-                    sx={{ fontWeight: 'bold', color: '#333' }}
-                  >
-                    {theme.name}
-                  </Typography>
-                </Box>
-              </Box>
+              <ThemeRadio key={theme.value} theme={theme} />
             ))}
           </RadioGroup>
         </FormControl>
 
         <Box className="flex justify-center gap-4 mt-5">
-          <Button
-            onClick={async () => {
+            <CommonButton
+              type='button'
+              text="Set Default Theme"
+              onClick={async () => {
               'use server';
               await setDefaultTheme(new FormData());
             }}
-            variant="contained"
-            fullWidth
-            sx={{
-              backgroundColor: "#"+color,
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: '1rem',
-              borderRadius: '8px',
-              textTransform: 'none',
-           
-            }}
-          >
-            SET TO DEFAULT
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{
-              backgroundColor: "#"+color,
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: '1rem',
-              borderRadius: '8px',
-              textTransform: 'none',
-         
-            }}
-          >
-            SAVE CHOICE
-          </Button>
+            color={color}
+            />
+            <CommonButton
+
+              text="Save Choice"
+              type="submit"
+              color={color}
+              />
+       
         </Box>
       </form>
     </Box>

@@ -1,6 +1,6 @@
 
 import { _fetch } from '@/fetch';
-import TogglePasswordFields from './TogglePasswordFields';
+import TogglePasswordFields from '../utils/TogglePasswordFields';
 import { Box, Typography, Button, TextField } from '@mui/material';
 import { backendUrl } from '@/config';
 import { User } from '@/interfaces/interfaces';

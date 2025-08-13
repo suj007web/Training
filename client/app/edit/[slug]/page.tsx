@@ -1,4 +1,4 @@
-import EditProfileForm from '@/app/components/edit-form';
+import EditProfileForm from '@/app/components/user/edit-form';
 import { handleDelete, handleSave } from './actions';
 
 export default function ProfilePage({params} : {params: {slug: string}}) {

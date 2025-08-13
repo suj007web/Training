@@ -4,7 +4,7 @@ import {
   Typography,
   TextField,
 } from '@mui/material';
-import TogglePasswordFields from './TogglePasswordFields';
+import TogglePasswordFields from '../utils/TogglePasswordFields';
 
 interface ResetFormProps {
   resetAction: (formData: FormData) => Promise<void>;

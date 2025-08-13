@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
-import { logoutAction } from '../logout/actions'
+import { logoutAction } from '../../logout/actions'
 import { cookies } from 'next/headers';
 import { themeMap } from '@/config';
 

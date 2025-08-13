@@ -3,7 +3,7 @@ import { backendUrl } from '@/config';
 import { _fetch } from '@/fetch';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { ThemeObject } from './components/ThemeSelector';
+import { ThemeObject } from './components/theme/ThemeSelector';
 
 export type Theme = {
   id: number,

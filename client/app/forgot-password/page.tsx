@@ -1,5 +1,5 @@
 import React from 'react'
-import ForgotForm from '../components/forgot-password'
+import ForgotForm from '../components/user/forgot-password'
 import { forgotAction } from '@/brevo'
 
 

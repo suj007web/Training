@@ -1,6 +1,6 @@
-import UserWelcome from "./components/UserWelcome";
-import Header from "./components/Header";
-import ThemeSelector from "./components/ThemeSelector";
+import UserWelcome from "./components/common/UserWelcome";
+import Header from "./components/common/Header";
+import ThemeSelector from "./components/theme/ThemeSelector";
 import { cookies } from "next/headers";
 import { parseJwt } from "@/lib/utils";
 import { redirect } from "next/navigation";
