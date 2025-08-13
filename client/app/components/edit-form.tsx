@@ -4,6 +4,7 @@ import TogglePasswordFields from './TogglePasswordFields';
 import { Box, Typography, Button, TextField } from '@mui/material';
 import { backendUrl } from '@/config';
 import { User } from '@/interfaces/interfaces';
+import { cookies } from 'next/headers';
 
 
 
@@ -14,11 +15,15 @@ export default async function EditProfileForm({
   handleDelete: (formData: FormData) => Promise<void>;
   userId: string;
 }) {
-
+  const cookieStore = await cookies();
 
   const getEditUser = async()=>{
     const response = await _fetch({
       url : `${backendUrl}/user/${userId}`,
+      headers : {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookieStore.get('token')?.value || ''}`
+      }
     })
 
     return response.data;

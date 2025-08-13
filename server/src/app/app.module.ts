@@ -1,18 +1,15 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserModule } from 'src/modules/user/user.module';
-import { AppConfigService } from 'src/config/config.service';
-import { AppConfigModule } from 'src/config/config.module';
-import { PasswordResetModule } from 'src/modules/password-reset.tsx/password-controller.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController, AppService } from '.';
+import { UserModule } from 'src/domains/user';
+import { AppConfigService, AppConfigModule } from 'src/config';
 
 
 @Module({
   imports: [
     AppConfigModule,
-    PasswordResetModule,
+
     MongooseModule.forRootAsync({
       imports : [AppConfigModule],
       useFactory : (appConfigService : AppConfigService) => ({

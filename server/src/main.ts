@@ -5,7 +5,10 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule,new FastifyAdapter(),{
+    logger: ['error', 'warn', 'log', 'debug'],
+    
+  });
   const configService = app.get(AppConfigService);
 
   // const fastify = app.getHttpAdapter().getInstance();

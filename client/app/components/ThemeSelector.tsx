@@ -21,8 +21,12 @@ export type ThemeObject = {
 
 
 const ThemeSelector = async () => {
+  const cookieStore = await cookies();
   const res = await _fetch<ThemeObject[]>({
-    url : `${backendUrl}/theme/all`
+    url : `${backendUrl}/theme/all`,
+    headers : {
+      'Authorization': `Bearer ${cookieStore.get('token')?.value || ''}`
+    }
   })
   console.log(`${backendUrl}/theme/all ` +res.data)
   const themes : ThemeObject[] = res.data || [];
@@ -30,7 +34,7 @@ const ThemeSelector = async () => {
 
 
   const currentTheme = await getCurrentTheme();
-    const cookieStore = await cookies();
+
     const themeName = cookieStore.get('selectedTheme')?.value || 'theme1';
     const color = themeMap[themeName];
   return (

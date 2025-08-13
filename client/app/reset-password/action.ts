@@ -33,7 +33,8 @@ export async function resetAction(formData : FormData){
             },
         })
         if(response.error){
-            throw new Error(response.error);
+            redirect(`/login?error=${encodeURIComponent(response.error)}`);
+            // throw new Error(response.error);
         }
         // }
         // const cookieStore = await cookies();
