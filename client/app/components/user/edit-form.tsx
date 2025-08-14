@@ -1,35 +1,16 @@
-
-import { _fetch } from '@/fetch';
 import TogglePasswordFields from '../utils/TogglePasswordFields';
 import { Box, Typography, Button, TextField } from '@mui/material';
-import { backendUrl } from '@/config';
 import { User } from '@/interfaces/interfaces';
-import { cookies } from 'next/headers';
 
 
-
-export default async function EditProfileForm({
-  handleSave, handleDelete, userId
+export default function EditProfileForm({
+  handleSave, handleDelete, userId, user,
 } : {
   handleSave: (formData: FormData) => Promise<void>;
   handleDelete: (formData: FormData) => Promise<void>;
   userId: string;
+  user: User;
 }) {
-  const cookieStore = await cookies();
-
-  const getEditUser = async()=>{
-    const response = await _fetch({
-      url : `${backendUrl}/user/${userId}`,
-      headers : {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookieStore.get('token')?.value || ''}`
-      }
-    })
-
-    return response.data;
-  }
-
-  const user  = await getEditUser() as User;
   console.log('User data for edit:', user);
 
   return (
@@ -48,7 +29,7 @@ export default async function EditProfileForm({
         variant="h5"
         className="text-black font-bold text-center mb-8"
       >
-        EDIT {user.username.toUpperCase()} PROFILE
+  EDIT {user.username.toUpperCase()} PROFILE
       </Typography>
 
       <form action={handleSave} className="flex flex-col gap-4 my-10">
