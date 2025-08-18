@@ -1,6 +1,7 @@
-import UserWelcome from "../components/common/UserWelcome";
 import Header from "../components/common/Header";
 import ThemeSelector from "../components/theme/ThemeSelector";
+import UserWelcome from "../components/common/UserWelcome";
+
 
 export function HomeContent({ username }: { username: string }) {
   return (

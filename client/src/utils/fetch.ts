@@ -1,10 +1,12 @@
 import axios, {
-  AxiosRequestConfig,
-  Method,
-  AxiosResponse,
   AxiosError,
-} from 'axios';
-import { APIResponse } from '@/src/interfaces/reponses';
+  AxiosRequestConfig,
+  AxiosResponse,
+  Method,
+} from "axios";
+
+import { APIResponse } from "@/src/interfaces/reponses";
+
 
 
 

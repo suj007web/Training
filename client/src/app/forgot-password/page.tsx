@@ -1,6 +1,8 @@
-import React from 'react'
+import React from "react";
+
 import ForgotForm from "@/src/components/user/forgot-password";
-import { forgotAction } from './action'
+
+import { forgotAction } from "./action";
 
 
 const ForgotPasswordPage = () => {

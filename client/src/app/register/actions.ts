@@ -1,7 +1,8 @@
 'use server';
+import { redirect } from 'next/navigation';
+
 import { backendUrl } from '@/src/utils/config';
 import { _fetch } from '@/src/utils/fetch';
-import { redirect } from 'next/navigation';
 
 export async function registerAction(formData: FormData) {
 

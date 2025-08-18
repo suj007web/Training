@@ -1,5 +1,6 @@
-import { backendUrl } from '@/src/utils/config';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
+
+import { backendUrl } from "@/src/utils/config";
 
 function extractCookieValue(setCookieHeader: string, key: string): string | undefined {
   const regex = new RegExp(`${key}=([^;]+)`);

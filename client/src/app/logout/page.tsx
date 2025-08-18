@@ -1,8 +1,8 @@
+import React from "react";
+import Link from "next/link";
 
+import { Box, Typography } from "@mui/material";
 
-import React from 'react';
-import { Box, Typography } from '@mui/material';
-import Link from 'next/link';
 const Logout = () => {
   return (
     <Box

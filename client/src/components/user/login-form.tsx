@@ -1,11 +1,13 @@
+import Link from 'next/link';
 import React from 'react';
+
 import {
   Box,
   Button,
   Typography,
   TextField,
 } from '@mui/material';
-import Link from 'next/link';
+
 import TogglePasswordFields from '../utils/TogglePasswordFields';
 
 interface LoginFormProps {

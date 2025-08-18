@@ -1,6 +1,7 @@
-import { Box, Typography, Container, Button } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import Link from 'next/link';
+import Link from "next/link";
+
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { Box, Button, Container, Typography } from "@mui/material";
 
 const SuccessPage = () => {
   return (

@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+
 import EditProfileForm from "@/src/components/user/edit-form";
 import { User } from "@/src/interfaces/interfaces";
+
 
 jest.mock('../../components/utils/TogglePasswordFields', () => {
   return function MockTogglePasswordFields(props: any) {

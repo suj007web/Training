@@ -1,7 +1,8 @@
 "use server"
-import { backendUrl } from '@/src/utils/config';
-import { _fetch } from '@/src/utils/fetch';
-import { cookies } from 'next/headers';
+import { cookies } from "next/headers";
+
+import { backendUrl } from "@/src/utils/config";
+import { _fetch } from "@/src/utils/fetch";
 
 
 export type Theme = {

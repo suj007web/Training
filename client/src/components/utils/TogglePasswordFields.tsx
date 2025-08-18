@@ -1,14 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState } from "react";
+
 import {
   FormControl,
+  IconButton,
+  InputAdornment,
   InputLabel,
   OutlinedInput,
-  InputAdornment,
-  IconButton,
-} from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
 
 interface TogglePasswordFieldsProps {
   showConfirmPassword?: boolean;

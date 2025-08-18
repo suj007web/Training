@@ -1,14 +1,23 @@
-import { backendUrl } from "@/src/utils/config"
-import { _fetch } from "@/src/utils/fetch"
 import { cookies } from "next/headers";
-import {
-  Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Typography
-} from '@mui/material';
-import { User } from "@/src/interfaces/interfaces";
 import Link from "next/link";
-import { parseJwt } from "@/lib/utils";
 import { redirect } from "next/navigation";
+
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+
+import { parseJwt } from "@/lib/utils";
+import { backendUrl } from "@/src/utils/config";
+import { User } from "@/src/interfaces/interfaces";
+import { _fetch } from "@/src/utils/fetch";
+
 const getAllUsers = async()=>{
 
   const cookieStore = await cookies();

@@ -1,8 +1,10 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
-import { toast } from 'sonner'; 
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+
+import { toast } from "sonner";
+
 
 export default function ToastHandler() {
   const searchParams = useSearchParams();

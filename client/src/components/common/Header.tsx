@@ -1,8 +1,9 @@
-import Link from 'next/link'
-import React from 'react'
-import { logoutAction } from '@/src/app/logout/actions'
-import { cookies } from 'next/headers';
-import { themeMap } from '@/src/utils/config';
+import React from "react";
+import { cookies } from "next/headers";
+import Link from "next/link";
+
+import { logoutAction } from "@/src/app/logout/actions";
+import { themeMap } from "@/src/utils/config";
 
 
 const Header = async() => {

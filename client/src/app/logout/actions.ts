@@ -1,11 +1,12 @@
 "use server"
 
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+import { parseJwt } from "@/lib/utils";
 import { backendUrl } from "@/src/utils/config";
 import { _fetch } from "@/src/utils/fetch";
-import { parseJwt } from "@/lib/utils";
 
-import { cookies } from "next/headers"
-import { redirect } from 'next/navigation';
 export async function logoutAction(){
     const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;

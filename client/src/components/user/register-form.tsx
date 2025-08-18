@@ -1,10 +1,12 @@
 import React from 'react';
+
 import {
   Box,
   Button,
   Typography,
   TextField,
 } from '@mui/material';
+
 import TogglePasswordFields from '../utils/TogglePasswordFields';
 
 interface RegisterFormProps {

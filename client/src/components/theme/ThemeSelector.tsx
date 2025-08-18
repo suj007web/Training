@@ -1,18 +1,19 @@
-import React from 'react';
+import React from "react";
+import { cookies } from "next/headers";
+
 import {
   Box,
-  Typography,
-  Radio,
-  RadioGroup,
   FormControl,
-  Button,
-} from '@mui/material';
-import { saveThemeChoice, setDefaultTheme, getCurrentTheme } from '@/src/actions/actions';
-import { _fetch } from '@/src/utils/fetch';
-import { backendUrl, themeMap } from '@/src/utils/config';
-import { cookies } from 'next/headers';
-import ThemeRadio from './ThemeRadio';
-import CommonButton from '../common/Button';
+  RadioGroup,
+  Typography,
+} from "@mui/material";
+
+import { saveThemeChoice, setDefaultTheme, getCurrentTheme } from "@/src/actions/actions";
+import { backendUrl, themeMap } from "@/src/utils/config";
+import { _fetch } from "@/src/utils/fetch";
+
+import CommonButton from "../common/Button";
+import ThemeRadio from "./ThemeRadio";
 
 
 export type ThemeObject = {

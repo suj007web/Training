@@ -1,7 +1,9 @@
+import { redirect } from "next/navigation";
+
 import { sendEmail } from "@/src/utils/brevo";
 import { backendUrl } from "@/src/utils/config";
 import { _fetch } from "@/src/utils/fetch";
-import { redirect } from "next/navigation";
+
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';

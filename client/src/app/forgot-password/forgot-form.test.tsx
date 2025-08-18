@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+
 import ForgotForm from "@/src/components/user/forgot-password";
 
 describe('Forgot Password Form', () => {

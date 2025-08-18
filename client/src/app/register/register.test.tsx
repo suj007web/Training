@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+
 import RegisterForm from '@/src/components/user/register-form';
 
 jest.mock('../components/utils/TogglePasswordFields', () => {

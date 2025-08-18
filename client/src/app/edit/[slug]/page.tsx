@@ -1,9 +1,12 @@
-import EditProfileForm from '@/src/components/user/edit-form';
-import { handleDelete, handleSave } from './actions';
-import { _fetch } from '@/src/utils/fetch';
-import { cookies } from 'next/headers';
-import { backendUrl } from '@/src/utils/config';
-import { User } from '@/src/interfaces/interfaces';
+import { cookies } from "next/headers";
+
+import EditProfileForm from "@/src/components/user/edit-form";
+import { backendUrl } from "@/src/utils/config";
+import { User } from "@/src/interfaces/interfaces";
+import { _fetch } from "@/src/utils/fetch";
+
+import { handleDelete, handleSave } from "./actions";
+
 
 export default async function ProfilePage({params} : {params: {slug: string}}) {
   const { slug } = params;

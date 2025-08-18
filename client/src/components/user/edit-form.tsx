@@ -1,6 +1,8 @@
-import TogglePasswordFields from '../utils/TogglePasswordFields';
 import { Box, Typography, Button, TextField } from '@mui/material';
+
 import { User } from '@/src/interfaces/interfaces';
+
+import TogglePasswordFields from '../utils/TogglePasswordFields';
 
 
 export default function EditProfileForm({

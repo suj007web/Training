@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
-import { parseJwt } from "@/lib/utils";
 import { redirect } from "next/navigation";
+
+import { parseJwt } from "@/lib/utils";
+
 import { HomeContent } from "./HomeContent";
 
 export default async function Home() {

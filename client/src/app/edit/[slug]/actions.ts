@@ -1,12 +1,12 @@
 'use server';
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { backendUrl } from '@/src/utils/config';
-import { _fetch } from '@/src/utils/fetch';
-import { User } from '@/src/interfaces/interfaces';
+import { backendUrl } from "@/src/utils/config";
+import { EditRequest } from "@/src/interfaces/requests";
+import { _fetch } from "@/src/utils/fetch";
+import { User } from "@/src/interfaces/interfaces";
 
-import { EditRequest } from '@/src/interfaces/requests';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
 export async function handleSave(formData: FormData) {
   try {

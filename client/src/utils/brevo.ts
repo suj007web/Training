@@ -1,8 +1,9 @@
 "use server"
 import SibApiV3Sdk from "sib-api-v3-sdk";
-import { brevoApiKey } from "@/src/utils/config";
 
+import { brevoApiKey } from "@/src/utils/config";
 import { _fetch } from "@/src/utils/fetch";
+
 
 export async function sendEmail(email: string, resetLink: string) {
             const defaultClient = SibApiV3Sdk.ApiClient.instance;

@@ -1,11 +1,12 @@
   'use server';
-import { backendUrl } from '@/src/utils/config';
-import { _fetch } from '@/src/utils/fetch';
-import {  LoginData } from '@/src/interfaces/reponses';
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { LoginRequest } from '@/src/interfaces/requests';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { LoginData } from "@/src/interfaces/reponses";
+import { LoginRequest } from "@/src/interfaces/requests";
+import { backendUrl } from "@/src/utils/config";
+import { _fetch } from "@/src/utils/fetch";
+
 
 
 
