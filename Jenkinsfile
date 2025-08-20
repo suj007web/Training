@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', 
-                    branches: [[name: 'main']], 
+                    branches: [[name: 'master']], 
                     userRemoteConfigs: [[
                         url: 'git@github.com:suj007web/Training.git',
                         credentialsId: 'git-ssh-key'
