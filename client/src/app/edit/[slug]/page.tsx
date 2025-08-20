@@ -8,8 +8,8 @@ import { _fetch } from "@/src/utils/fetch";
 import { handleDelete, handleSave } from "./actions";
 
 
-export default async function ProfilePage({params} : {params: {slug: string}}) {
-  const { slug } = params;
+export default async function ProfilePage({params} : {params: Promise<{slug: string}>}) {
+  const { slug } = await params;
   console.log("Slug:", slug);
 
   const cookieStore = await cookies();
