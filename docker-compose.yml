@@ -12,6 +12,8 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"  
+    networks:
+      - themenet
 
   backend:
     build: ./server
@@ -22,6 +24,8 @@ services:
     env_file:
       - ./server/.env
     restart: always
+    networks:
+      - themenet
 
   frontend:
     build: ./client
@@ -30,6 +34,12 @@ services:
     env_file:
       - ./client/.env
     restart: always
+    networks:
+      - themenet
 
 volumes:
   pgdata:
+
+networks:
+  themenet:
+    driver: bridge
