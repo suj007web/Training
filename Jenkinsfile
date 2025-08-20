@@ -2,12 +2,11 @@ pipeline {
   agent {
     label 'themes'
   }
-
   stages {
     stage('Clean Workspace') {
       steps {
         sh '''
-            docker compose down --rmi all --remove-orphans || true
+            docker-compose down --rmi all --remove-orphans || true
         '''
         cleanWs()
       }
