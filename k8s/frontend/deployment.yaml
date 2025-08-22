@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: docker.io/your-dockerhub-user/my-frontend:latest
+          image: docker.io/suj007web/my-frontend:latest
           ports:
             - containerPort: 3001
           envFrom:
