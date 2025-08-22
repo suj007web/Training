@@ -49,8 +49,8 @@ pipeline {
   file(credentialsId: 'client-env-file', variable: 'CLIENT_ENV')
 ]) {
   sh '''
-    cp $SERVER_ENV ./server.env
-    cp $CLIENT_ENV ./client.env
+    cp "$SERVER_ENV" ./server.env
+    cp "$CLIENT_ENV" ./client.env
 
     kubectl delete secret backend-env || true
     kubectl create secret generic backend-env --from-env-file=./server.env
