@@ -30,6 +30,7 @@ pipeline {
     stage('Build & Push Docker Images') {
       steps {
         script {
+ withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
           sh """
             docker build -t $REGISTRY/$BACKEND_IMAGE:$TAG ./server
             docker build -t $REGISTRY/$FRONTEND_IMAGE:$TAG ./client
@@ -40,7 +41,7 @@ pipeline {
         }
       }
     }
-
+    }
     stage('Create K8s Secrets from Env Files') {
       steps {
         withCredentials([
