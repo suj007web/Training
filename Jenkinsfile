@@ -44,20 +44,22 @@ pipeline {
     }
     stage('Create K8s Secrets from Env Files') {
       steps {
-        withCredentials([
-          file(credentialsId: 'server-env-file', variable: 'SERVER_ENV'),
-          file(credentialsId: 'client-env-file', variable: 'CLIENT_ENV')
-        ]) {
-          sh '''
-            # Create or replace backend secret
-            kubectl delete secret backend-env || true
-            kubectl create secret generic backend-env --from-env-file=$SERVER_ENV
+       withCredentials([
+  file(credentialsId: 'server-env-file', variable: 'SERVER_ENV'),
+  file(credentialsId: 'client-env-file', variable: 'CLIENT_ENV')
+]) {
+  sh '''
+    cp $SERVER_ENV ./server.env
+    cp $CLIENT_ENV ./client.env
 
-            # Create or replace frontend secret
-            kubectl delete secret frontend-env || true
-            kubectl create secret generic frontend-env --from-env-file=$CLIENT_ENV
-          '''
-        }
+    kubectl delete secret backend-env || true
+    kubectl create secret generic backend-env --from-env-file=./server.env
+
+    kubectl delete secret frontend-env || true
+    kubectl create secret generic frontend-env --from-env-file=./client.env
+  '''
+}
+
       }
     }
 
