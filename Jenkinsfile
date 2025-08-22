@@ -1,20 +1,24 @@
 pipeline {
-  agent {
-    label 'themes'
+  agent { label 'themes' }
+
+  environment {
+    REGISTRY = "docker.io/suj007web"
+    BACKEND_IMAGE = "my-backend"
+    FRONTEND_IMAGE = "my-frontend"
+    TAG = "latest"
   }
+
   stages {
     stage('Clean Workspace') {
       steps {
-        sh '''
-            docker-compose down --rmi all --remove-orphans || true
-        '''
         cleanWs()
       }
     }
+
     stage('Checkout') {
       steps {
-        checkout([$class: 'GitSCM', 
-          branches: [[name: 'master']], 
+        checkout([$class: 'GitSCM',
+          branches: [[name: 'master']],
           userRemoteConfigs: [[
             url: 'git@github.com:suj007web/Training.git',
             credentialsId: 'git-ssh-key'
@@ -23,29 +27,54 @@ pipeline {
       }
     }
 
-    stage('Prepare Environment') {
+    stage('Build & Push Docker Images') {
+      steps {
+        script {
+          sh """
+            docker build -t $REGISTRY/$BACKEND_IMAGE:$TAG ./server
+            docker build -t $REGISTRY/$FRONTEND_IMAGE:$TAG ./client
+            echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $REGISTRY/$BACKEND_IMAGE:$TAG
+            docker push $REGISTRY/$FRONTEND_IMAGE:$TAG
+          """
+        }
+      }
+    }
+
+    stage('Create K8s Secrets from Env Files') {
       steps {
         withCredentials([
           file(credentialsId: 'server-env-file', variable: 'SERVER_ENV'),
           file(credentialsId: 'client-env-file', variable: 'CLIENT_ENV')
         ]) {
           sh '''
-            cp $SERVER_ENV ./server/.env
-            cp $CLIENT_ENV ./client/.env
+            # Create or replace backend secret
+            kubectl delete secret backend-env || true
+            kubectl create secret generic backend-env --from-env-file=$SERVER_ENV
+
+            # Create or replace frontend secret
+            kubectl delete secret frontend-env || true
+            kubectl create secret generic frontend-env --from-env-file=$CLIENT_ENV
           '''
         }
       }
     }
 
-    stage('Build Docker Images') {
+    stage('Deploy to Kubernetes') {
       steps {
-        sh 'docker-compose build'
+        withKubeConfig([credentialsId: 'kubeconfig-cred']) {
+          sh '''
+            kubectl apply -f k8s/postgres/
+            kubectl apply -f k8s/backend/
+            kubectl apply -f k8s/frontend/
+          '''
+        }
       }
     }
 
-    stage('Start App') {
+    stage('Verify Deployment') {
       steps {
-        sh 'docker-compose up -d'
+        sh 'kubectl get pods -o wide'
       }
     }
   }
